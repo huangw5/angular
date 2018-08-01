@@ -163,10 +163,10 @@ jobs:
       - checkout:
           <<: *post_checkout
       # See remote cache documentation in /docs/BAZEL.md
-      - run: .circleci/setup_cache.sh
-      - run: sudo cp .circleci/bazel.rc /etc/bazel.bazelrc
-      - *setup-bazel-remote-cache
-
+      - run: sudo cp .circleci/rbe-bazel.rc /etc/bazel.bazelrc
+      - run:
+          name: Decrypt GCP credentials
+          command: 'openssl aes-256-cbc -d -in .circleci/gcp_token -k "${KEY}" -out $HOME/.gcp_credentials'
       - run: bazel run @nodejs//:yarn
       - run: scripts/build-packages-dist.sh
 
